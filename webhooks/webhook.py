@@ -17,7 +17,7 @@ MQTT_BROKER = os.environ.get('MQTT_BROKER')  # Địa chỉ của MQTT broker (t
 MQTT_PORT = int(os.environ.get("MQTT_PORT"))                 # Cổng của MQTT broker
 MQTT_USERNAME = os.environ.get('MQTT_USERNAME')  # Username của MQTT broker
 MQTT_PASSWORD = os.environ.get('MQTT_PASSWORD') # Password của MQTT broker
-
+print(MQTT_BROKER, MQTT_PORT, MQTT_USERNAME, MQTT_PASSWORD)
 client = mqtt.Client()
 
 client.tls_set(tls_version=mqtt.ssl.PROTOCOL_TLS)
