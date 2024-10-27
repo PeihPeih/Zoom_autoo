@@ -53,6 +53,7 @@ async def webhook(request: Request):
     payload = body.get('payload')
     event = body.get('event')
     print(payload)
+    print(event)
 
     if event == 'meeting.participant_joined':
         topic = 'zoom/participant/joined'
