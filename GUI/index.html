@@ -140,9 +140,9 @@
 
     // Sự kiện khi nhận tin nhắn từ chủ đề
     client.on("message", function (topic, message) {
-        let messageJSON = JSON.parse(message.toString());
+        let messageJSON = message.toString();
         if (topic === "zoom/participant/joined") {
-            console.log("Có người tham gia cuộc họp:", messageJSON);
+            console.log(message);
         } else if (topic === "zoom/participant/left") {
             console.log("Có người rời cuộc họp:", message.toString());
         }
