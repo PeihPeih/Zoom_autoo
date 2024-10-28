@@ -1,0 +1,22 @@
+{
+    'account_id': 'zhTPwA8ZSVuXvqw2Y-EYuA', 
+    'object': {
+        'uuid': 'Ho5i28t/R7iUqbjBE2jZKg==', 
+        'participant': {
+            'user_id': '16778240', 
+            'user_name': 'Hiệp', 
+            'participant_user_id': 'zcxsTyXdQZGhk5VLjLPyjw', 
+            'id': 'zcxsTyXdQZGhk5VLjLPyjw', 
+            'join_time': '2024-10-27T09:19:47Z', 
+            'email': 'tienhiep345@gmail.com', 
+            'participant_uuid': '85DA671C-5D6A-09DA-626D-7E4A42FA4F01'
+        }, 
+        'id': '76415479616', 
+        'type': 2, 
+        'topic': "Hiệp's Zoom Meeting", 
+        'host_id': 'zcxsTyXdQZGhk5VLjLPyjw', 
+        'duration': 30, 
+        'start_time': '2024-10-27T09:19:47Z', 
+        'timezone': 'Asia/Bangkok'
+    }
+}

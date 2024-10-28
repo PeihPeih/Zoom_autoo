@@ -140,8 +140,12 @@
 
     // Sự kiện khi nhận tin nhắn từ chủ đề
     client.on("message", function (topic, message) {
-      // Chuyển tin nhắn từ dạng buffer sang chuỗi
-      console.log("Chủ đề:", topic, "Tin nhắn:", message.toString());
+        let messageJSON = JSON.parse(message.toString());
+        if (topic === "zoom/participant/joined") {
+            console.log("Có người tham gia cuộc họp:", messageJSON);
+        } else if (topic === "zoom/participant/left") {
+            console.log("Có người rời cuộc họp:", message.toString());
+        }
     });
 
     // Sự kiện khi có lỗi

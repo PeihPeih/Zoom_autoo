@@ -6,6 +6,7 @@ import hashlib
 import os
 from dotenv import load_dotenv
 import paho.mqtt.client as mqtt
+import datetime
 
 load_dotenv()
 
@@ -54,11 +55,19 @@ async def webhook(request: Request):
     event = body.get('event')
     print(payload)
     print(event)
+    object_payload = payload['object']
+    participant = object_payload['participant']
+    name = participant['user_name']
 
     if event == 'meeting.participant_joined':
         topic = 'zoom/participant/joined'
         if payload:
-            client.publish(topic, json.dumps(payload))
+            joined_time = participant['join_time']
+            timestamp = datetime.datetime.fromisoformat(joined_time.replace("Z", "+00:00"))
+            utc_plus_7 = timestamp + datetime.timedelta(hours=7)
+            formatted_timestamp = utc_plus_7.strftime("[%d-%m-%Y %H:%M:%S]")
+            send_data = formatted_timestamp + " " + name + " đã tham gia cuộc họp"
+            client.publish(topic, send_data)
             print(f"Đã gửi dữ liệu tới {topic}: {payload}")
     elif event == 'meeting.participant_left':
         topic = 'zoom/participant/left'
