@@ -67,8 +67,8 @@ async def webhook(request: Request):
             timestamp = datetime.datetime.fromisoformat(joined_time.replace("Z", "+00:00"))
             utc_plus_7 = timestamp + datetime.timedelta(hours=7)
             formatted_timestamp = utc_plus_7.strftime("[%d-%m-%Y %H:%M:%S]")
-            send_data = formatted_timestamp + " " + name + " đã tham gia cuộc họp"
-            client.publish(topic, send_data)
+            send_data = {"message": formatted_timestamp + " " + name + " đã tham gia cuộc họp"}
+            client.publish(topic, json.dumps(send_data))
             print(f"Đã gửi dữ liệu tới {topic}: {payload}")
     elif event == 'meeting.participant_left':
         topic = 'zoom/participant/left'
