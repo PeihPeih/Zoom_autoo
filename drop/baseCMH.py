@@ -30,3 +30,5 @@ def get_token():
         return token_data
     else:
         raise Exception(f"Error: {response.status_code}, {response.text}")
+    
+print(get_token())

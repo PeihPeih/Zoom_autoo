@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Interface</title>
+    <link rel="stylesheet" href="../static/css/index.css">
+    <link rel="stylesheet" href="../static/css/createMeeting.css">
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    </head>
+
+    <body>
+        <header class="header">
+            <div class="search-bar">
+                <input type="text" placeholder="Cái này dùng để search lịch sử cuộc họp">
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="main-content">
+                <div class="meeting-name">
+                    Tên cuộc họp
+                </div>
+                <div class="meeting-logs">
+                    {% include 'components/meetingLogs.html' %}
+                </div>
+            </div>
+            {% include 'components/addMeeting.html' %}
+        </div>
+    </body>
+    <script src="/static/js/createMeeting.js"></script>
+    <script>
+        
+
+    </script>
+
+</html>
