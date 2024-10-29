@@ -58,7 +58,7 @@ async def webhook(request: Request):
     print(object_payload)
     
     
-    if event === 'meeting.participant_joined':
+    if event == 'meeting.participant_joined':
         participant = object_payload['participant']
         name = participant['user_name']
         topic = 'zoom/participant/joined'
@@ -74,7 +74,7 @@ async def webhook(request: Request):
             }
             client.publish(topic, json.dumps(data))
             print(f"Đã gửi dữ liệu tới {topic}: {payload}")
-    if event === 'meeting.participant_left':
+    if event == 'meeting.participant_left':
         participant = object_payload['participant']
         name = participant['user_name']
         topic = 'zoom/participant/left'
