@@ -70,7 +70,7 @@ async def webhook(request: Request):
             data = {
                 "name": name,
                 "join_time": formatted_timestamp,
-                "content": "Đã tham gia cuộc họp"
+                "content": "đã tham gia cuộc họp"
             }
             client.publish(topic, json.dumps(data))
             print(f"Đã gửi dữ liệu tới {topic}: {payload}")
@@ -86,7 +86,7 @@ async def webhook(request: Request):
             data = {
                 "name": name,
                 "leave_time": formatted_timestamp,
-                "content": "Đã rời khỏi cuộc họp"
+                "content": "đã rời khỏi cuộc họp"
             }
             client.publish(topic, json.dumps(data))
             print(f"Đã gửi dữ liệu tới {topic}: {payload}")

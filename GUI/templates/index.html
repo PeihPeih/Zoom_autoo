@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="../static/css/createMeeting.css">
     <link rel="stylesheet" href="../static/css/meetingLogs.css">
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -37,11 +39,11 @@
             {% include 'components/addMeeting.html' %}
         </div>
     </body>
-    <script src="/static/js/createMeeting.js"></script>
-    <script src="/static/js/logMeeting.js"></script>
+    <!-- <script src="../static/js/createMeeting.js"></script>
+    <script src="../static/js/logMeeting.js"></script> -->
     <script>
         const contentLogs = document.getElementById("content-logs");
-
+        const socket = io('http://0.0.0.0:8000')
 const client = mqtt.connect("wss://7135442a5e904296bf8f44f17ea3feec.s1.eu.hivemq.cloud:8884/mqtt", {
     username: "tienhiep345",
     password: "Hiep2003",
@@ -63,9 +65,9 @@ client.on("message", function (topic, message) {
     let messageJSON = JSON.parse(message.toString());
     console.log(messageJSON);
     if (topic === "zoom/participant/joined") {
-        contentLogs.innerHTML += `<p><span class="text-success">&bull;</span>[${messageJSON['join_time']}]: ${messageJSON['name']} ${messageJSON['content']}</p>`;
+        contentLogs.innerHTML += `<p><span class="text-success">&bull;</span>${messageJSON['join_time']}: ${messageJSON['name']} ${messageJSON['content']}</p>`;
     } else if (topic === "zoom/participant/left") {
-        contentLogs.innerHTML += `<p><span class="text-danger">&bull;</span>[${messageJSON['leave_time']}]: ${messageJSON['name']} ${messageJSON['content']} </p>`;
+        contentLogs.innerHTML += `<p><span class="text-danger">&bull;</span>${messageJSON['leave_time']}: ${messageJSON['name']} ${messageJSON['content']} </p>`;
     }
 });
 
