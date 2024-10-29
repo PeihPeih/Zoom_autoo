@@ -56,10 +56,11 @@ async def webhook(request: Request):
     print(event)
     object_payload = payload['object']
     print(object_payload)
-    participant = object_payload['participant']
-    name = participant['user_name']
     
-    if event == 'meeting.participant_joined':
+    
+    if event === 'meeting.participant_joined':
+        participant = object_payload['participant']
+        name = participant['user_name']
         topic = 'zoom/participant/joined'
         if payload:
             joined_time = participant['join_time']
@@ -73,8 +74,19 @@ async def webhook(request: Request):
             }
             client.publish(topic, json.dumps(data))
             print(f"Đã gửi dữ liệu tới {topic}: {payload}")
-    elif event == 'meeting.participant_left':
+    if event === 'meeting.participant_left':
+        participant = object_payload['participant']
+        name = participant['user_name']
         topic = 'zoom/participant/left'
         if payload:
-            client.publish(topic, json.dumps(payload))
+            leave_time = participant['leave_time']
+            timestamp = datetime.datetime.fromisoformat(leave_time.replace("Z", "+00:00"))
+            utc_plus_7 = timestamp + datetime.timedelta(hours=7)
+            formatted_timestamp = utc_plus_7.strftime("[%d-%m-%Y %H:%M:%S]")
+            data = {
+                "name": name,
+                "leave_time": formatted_timestamp,
+                "content": "Đã rời khỏi cuộc họp"
+            }
+            client.publish(topic, json.dumps(data))
             print(f"Đã gửi dữ liệu tới {topic}: {payload}")
