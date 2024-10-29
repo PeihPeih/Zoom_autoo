@@ -71,7 +71,7 @@ async def webhook(request: Request):
                 "join_time": formatted_timestamp,
                 "content": "Đã tham gia cuộc họp"
             }
-            client.publish(topic, data)
+            client.publish(topic, json.dumps(data))
             print(f"Đã gửi dữ liệu tới {topic}: {payload}")
     elif event == 'meeting.participant_left':
         topic = 'zoom/participant/left'
