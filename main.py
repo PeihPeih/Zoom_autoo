@@ -1,6 +1,7 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request    
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from typing import Optional
 # import url
 from api.url import router as api_url
 from webhooks.webhook import webhook_router
@@ -17,3 +18,9 @@ app.include_router(webhook_router)
 @app.get("/home")
 async def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
+
+@app.get("/callback")
+async def callback(code: Optional[str] = None):
+    if not code:
+        return {"error": "Authorization code not found"}
+    return {"code": code}
