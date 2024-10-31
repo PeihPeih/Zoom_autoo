@@ -54,16 +54,16 @@ async def get_meeting_list(meeting_id: str, ACCESS_TOKEN: str = Depends(get_toke
 @router.post("/meetings", summary="Create a meeting")
 async def create_meeting(meeting: CreateMeetingRequest, ACCESS_TOKEN: str = Depends(get_token)):
     # Gọi API để tạo cuộc họp
-    headers = {
+    meeting_info = None
+    try:
+        headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}",
         "Content-Type": "application/json"
-    }
+        }
 
-    meeting_info = None
-    response = requests.post(
-        "https://api.zoom.us/v2/users/me/meetings", headers=headers, json=meeting.dict())
+        response = requests.post("https://api.zoom.us/v2/users/me/meetings", headers=headers, json=meeting.model_dump())
 
-    if response.status_code == 201:
+        if response.status_code == 201:
         meeting_info = response.json()
         contentAfterAddRegistrants = ""
     # # Nếu token hết hạn, yêu cầu refresh token
@@ -74,7 +74,8 @@ async def create_meeting(meeting: CreateMeetingRequest, ACCESS_TOKEN: str = Depe
             contentAfterAddRegistrants = add_registrants(
                 meeting_info["id"], meeting.invitees, ACCESS_TOKEN)
         meeting_info["contentAfterAddRegistrants"] = contentAfterAddRegistrants
-
+    except Exception as e:
+        print(e)
     return {"meeting_info": meeting_info}
     
 
