@@ -1,4 +1,5 @@
 const contentLogs = document.getElementById("content-logs");
+console.log(contentLogs);
 
 const client = mqtt.connect("wss://7135442a5e904296bf8f44f17ea3feec.s1.eu.hivemq.cloud:8884/mqtt", {
     username: "tienhiep345",
