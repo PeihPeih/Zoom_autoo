@@ -20,9 +20,9 @@ client.on("connect", function () {
 client.on("message", function (topic, message) {
     let messageJSON = JSON.parse(message.toString());
     if (topic === "zoom/participant/joined") {
-        contentLogs.innerHTML += `<span style="color: green">${messageJSON['message']}</span><br>`;
+        contentLogs.innerHTML += `<p class="d-flex align-items-center"><span class="text-success mr-2" style="font-size: 25px">&bull;</span> ${messageJSON['join_time']}: ${messageJSON['name']} ${messageJSON['content']}</p>`;
     } else if (topic === "zoom/participant/left") {
-        console.log("Có người rời cuộc họp:", message.toString());
+        contentLogs.innerHTML += `<p class="d-flex align-items-center"><span class="text-danger mr-2" style="font-size: 25px">&bull;</span> ${messageJSON['leave_time']}: ${messageJSON['name']} ${messageJSON['content']} </p>`;
     }
 });
 
