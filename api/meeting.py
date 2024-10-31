@@ -64,8 +64,8 @@ async def create_meeting(meeting: CreateMeetingRequest, ACCESS_TOKEN: str = Depe
         response = requests.post("https://api.zoom.us/v2/users/me/meetings", headers=headers, json=meeting.model_dump())
 
         if response.status_code == 201:
-        meeting_info = response.json()
-        contentAfterAddRegistrants = ""
+            meeting_info = response.json()
+            contentAfterAddRegistrants = ""
     # # Nếu token hết hạn, yêu cầu refresh token
     # if response.status_code == 401:
     #     await refresh_token()  # Cập nhật access token
