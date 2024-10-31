@@ -61,13 +61,30 @@ document.addEventListener("DOMContentLoaded", function () {
   };
   async function fetchUpcomingMeetings() {
     try {
-      const response = await fetch(`/meetings/users/${userId}`, {
+      const response = await fetch(`/meetings/users/${userId}/upcoming`, {
+        method: "GET",
+      });
+      if (response.ok) {
+        const meetings = await response.json();
+        console.log(meetings);
+        populateMeetingTable(meetings);
+      } else {
+        const error = await response.json();
+        console.error("Error fetching meetings:", error);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  async function fetchCurrentMeetings() {
+    try {
+      const response = await fetch(`/meetings/users/${userId}/live`, {
         method: "GET",
       });
 
       if (response.ok) {
         const meetings = await response.json();
-        populateMeetingTable(meetings);
         currentMeetingTable(meetings);
       } else {
         const error = await response.json();
@@ -83,24 +100,20 @@ document.addEventListener("DOMContentLoaded", function () {
       .getElementById("upcoming-meetings-table")
       .getElementsByTagName("tbody")[0];
     tbody.innerHTML = ""; // Clear existing rows
-
-    const now = new Date();
     meetings.forEach((meeting) => {
-      const startTime = new Date(meeting.start_time);
-      const endTime = new Date(startTime.getTime() + meeting.duration * 60000);
-      console.log(startTime, endTime);
-      if (startTime > now) {
-        const row = tbody.insertRow();
-        row.insertCell(0).innerText = meeting.topic;
-        row.insertCell(1).innerText = startTime.toLocaleString();
-        row.insertCell(2).innerText = meeting.duration;
-        row.insertCell(
-          3
-        ).innerHTML = `<button onclick="manageMeeting('${meeting.id}')">Quản lý</button>`;
-        row.insertCell(
-          4
-        ).innerHTML = `<button onclick="joinMeeting('${meeting.id}')">Tham gia</button>`;
-      }
+      const row = tbody.insertRow();
+      row.insertCell(0).innerText = meeting.topic;
+      let startTime = new Date(meeting.start_time);
+      startTime.setHours(startTime.getHours() + 7);
+      let formattedDate = startTime.toISOString();
+      row.insertCell(1).innerText = formattedDate;
+      row.insertCell(2).innerText = meeting.duration;
+      row.insertCell(
+        3
+      ).innerHTML = `<button onclick="manageMeeting('${meeting.id}')">Quản lý</button>`;
+      row.insertCell(
+        4
+      ).innerHTML = `<button onclick="joinMeeting('${meeting.join_url}')">Tham gia</button>`;
     });
   }
 
@@ -109,27 +122,26 @@ document.addEventListener("DOMContentLoaded", function () {
       .getElementById("current-meetings-table")
       .getElementsByTagName("tbody")[0];
     tbody.innerHTML = ""; // Clear existing rows
-
     const now = new Date();
     meetings.forEach((meeting) => {
-      const startTime = new Date(meeting.start_time);
-      const endTime = new Date(startTime.getTime() + meeting.duration * 60000);;
-      if (startTime < now && endTime > now) {
-        const row = tbody.insertRow();
-        row.insertCell(0).innerText = meeting.topic;
-        row.insertCell(1).innerText = startTime.toLocaleString();
-        row.insertCell(2).innerText = meeting.duration;
-        row.insertCell(
-          3
-        ).innerHTML = `<button onclick="manageMeeting('${meeting.id}')">Quản lý</button>`;
-        row.insertCell(
-          4
-        ).innerHTML = `<button onclick="joinMeeting('${meeting.id}')">Tham gia</button>`;
-      }
+      const row = tbody.insertRow();
+      row.insertCell(0).innerText = meeting.topic;
+      let startTime = new Date(meeting.start_time);
+      startTime.setHours(startTime.getHours() + 7);
+      let formattedDate = startTime.toISOString();
+      row.insertCell(1).innerText = formattedDate;
+      row.insertCell(2).innerText = meeting.duration;
+      row.insertCell(
+        3
+      ).innerHTML = `<button onclick="manageMeeting('${meeting.id}')">Quản lý</button>`;
+      row.insertCell(
+        4
+      ).innerHTML = `<button onclick="joinMeeting('${meeting.join_url}')">Tham gia</button>`;
     });
   }
 
   fetchUpcomingMeetings();
+  fetchCurrentMeetings();
 });
 
 function manageMeeting(meetingId) {
@@ -137,7 +149,7 @@ function manageMeeting(meetingId) {
   // Add your management logic here
 }
 
-function joinMeeting(meetingId) {
-  alert(`Tham gia cuộc họp: ${meetingId}`);
-  // Add your join logic here
+function joinMeeting(joinUrl) {
+  // redirect to the meeting page by another tab
+  window.open(joinUrl, "_blank");
 }

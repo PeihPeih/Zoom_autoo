@@ -6,15 +6,15 @@ from http_request.meeting import CreateMeetingRequest
 router = APIRouter()
 
 
-@router.get("/meetings/users/{user_id}", summary="Get meeting list by user's id")
-async def get_meeting_list(user_id: str, ACCESS_TOKEN: str = Depends(get_token)):
+@router.get("/meetings/users/{user_id}/{typeList}", summary="Get meeting list by user's id")
+async def get_meeting_list(user_id: str, typeList: str, ACCESS_TOKEN: str = Depends(get_token)):
     # Gọi API để lấy danh sách cuộc họp
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}"
     }
 
     response = requests.get(
-        f"https://api.zoom.us/v2/users/{user_id}/meetings", headers=headers, params={"type": "scheduled"})
+        f"https://api.zoom.us/v2/users/{user_id}/meetings", headers=headers, params={"type": typeList})
 
     if response.status_code == 200:
         return response.json().get('meetings', [])
@@ -54,18 +54,17 @@ async def get_meeting_list(meeting_id: str, ACCESS_TOKEN: str = Depends(get_toke
 @router.post("/meetings", summary="Create a meeting")
 async def create_meeting(meeting: CreateMeetingRequest, ACCESS_TOKEN: str = Depends(get_token)):
     # Gọi API để tạo cuộc họp
-    meeting_info = None
-    try:
-        headers = {
+    headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}",
         "Content-Type": "application/json"
-        }
+    }
 
-        response = requests.post("https://api.zoom.us/v2/users/me/meetings", headers=headers, json=meeting.model_dump())
+    response = requests.post(
+        "https://api.zoom.us/v2/users/me/meetings", headers=headers, json=meeting.dict())
 
-        if response.status_code == 201:
-            meeting_info = response.json()
-            contentAfterAddRegistrants = ""
+    if response.status_code == 201:
+        meeting_info = response.json()
+        contentAfterAddRegistrants = ""
     # # Nếu token hết hạn, yêu cầu refresh token
     # if response.status_code == 401:
     #     await refresh_token()  # Cập nhật access token
@@ -74,17 +73,11 @@ async def create_meeting(meeting: CreateMeetingRequest, ACCESS_TOKEN: str = Depe
             contentAfterAddRegistrants = add_registrants(
                 meeting_info["id"], meeting.invitees, ACCESS_TOKEN)
         meeting_info["contentAfterAddRegistrants"] = contentAfterAddRegistrants
-    except Exception as e:
-        print(e)
-    return {"meeting_info": meeting_info}
-    
+        return meeting_info
 
-@router.get("/meetings/{meeting_uuid}/content")
-async def get_meeting_content(meeting_uuid: str):
-    content = ""
-    with open(f"meeting_logs/{meeting_uuid}.json", "r") as f:
-       content = f.read()
-    return {"content": content}
+    raise HTTPException(status_code=response.status_code,
+                        detail=response.json())
+
 
 def extract_name_from_email(email: str):
     # Giả sử email có định dạng: firstname.lastname@example.com
