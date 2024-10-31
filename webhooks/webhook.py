@@ -70,8 +70,11 @@ async def webhook(request: Request):
                 "join_time": formatted_timestamp,
                 "content": "đã tham gia cuộc họp"
             }
-            with open(f"meeting_logs/{object_payload['uuid']}.txt", "a") as f:
-                f.write(f"{name} đã tham gia cuộc họp vào lúc {formatted_timestamp}\n")
+            try:
+                with open(f"{object_payload['uuid']}.txt", "a") as f:
+                    f.write(f"{name} đã tham gia cuộc họp vào lúc {formatted_timestamp}\n")
+            except:
+                print("Không tìm thấy file lưu thông tin cuộc họp")
             client.publish(topic, json.dumps(data))
             print(f"Đã gửi dữ liệu tới {topic}: {payload}")
 
@@ -88,8 +91,11 @@ async def webhook(request: Request):
                 "leave_time": formatted_timestamp,
                 "content": "đã rời khỏi cuộc họp"
             }
-            with open(f"meeting_logs/{object_payload['uuid']}.txt", "a") as f:
-                f.write(f"{name} đã rời khỏi cuộc họp vào lúc {formatted_timestamp}\n")
+            try:
+                with open(f"{object_payload['uuid']}.txt", "a") as f:
+                    f.write(f"{name} đã rời khỏi cuộc họp vào lúc {formatted_timestamp}\n")
+            except:
+                print("Không tìm thấy file lưu thông tin cuộc họp")
             client.publish(topic, json.dumps(data))
             print(f"Đã gửi dữ liệu tới {topic}: {payload}")
 
@@ -102,7 +108,7 @@ async def webhook(request: Request):
         topic_metting = object_payload['topic']
         duration = object_payload['duration']
         info_meeting = "Thông tin cuộc họp: \n" + f"ID cuộc họp: {uuid_meeting}\n" + f"Thời gian bắt đầu: {formatted_timestamp}\n" + f"Chủ đề: {topic_metting}\n" + f"Thời lượng: {duration} phút\n" + "Người tham gia: \n"
-        with open(f"meeting_logs/{uuid_meeting}.txt", "w") as f:
+        with open(f"{uuid_meeting}.txt", "w") as f:
             f.write(info_meeting)
         print(f"Đã tạo file lưu thông tin cuộc họp: {info_meeting}")
         
