@@ -101,6 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .getElementsByTagName("tbody")[0];
     tbody.innerHTML = ""; // Clear existing rows
     meetings.forEach((meeting) => {
+      if(Date.now() > new Date(meeting.start_time).getTime()) return;
       const row = tbody.insertRow();
       row.insertCell(0).innerText = meeting.topic;
       let startTime = new Date(meeting.start_time);
