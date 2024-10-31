@@ -5,9 +5,9 @@ import os
 
 load_dotenv()
 
-client_id = os.environ.get('ZOOM_CLIENT_ID')
-client_secret = os.environ.get('ZOOM_CLIENT_SECRET')
-account_id = os.environ.get('ZOOM_ACCOUNT_ID')
+client_id = os.environ.get('zci')
+client_secret = os.environ.get('zcs')
+account_id = os.environ.get('zai')
 
 def get_token():
     token_url = "https://zoom.us/oauth/token"
