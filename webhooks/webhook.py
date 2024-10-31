@@ -72,7 +72,7 @@ async def webhook(request: Request):
                 "join_time": formatted_timestamp,
                 "content": "đã tham gia cuộc họp"
             }
-            client.publish(topic, json.dumps(data))
+            await client.publish(topic, json.dumps(data))
             print(f"Đã gửi dữ liệu tới {topic}: {payload}")
     if event == 'meeting.participant_left':
         participant = object_payload['participant']
@@ -88,5 +88,5 @@ async def webhook(request: Request):
                 "leave_time": formatted_timestamp,
                 "content": "đã rời khỏi cuộc họp"
             }
-            client.publish(topic, json.dumps(data))
+            await client.publish(topic, json.dumps(data))
             print(f"Đã gửi dữ liệu tới {topic}: {payload}")
