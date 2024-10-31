@@ -73,7 +73,7 @@ async def create_meeting(meeting: CreateMeetingRequest, ACCESS_TOKEN: str = Depe
             contentAfterAddRegistrants = add_registrants(
                 meeting_info["id"], meeting.invitees, ACCESS_TOKEN)
         meeting_info["contentAfterAddRegistrants"] = contentAfterAddRegistrants
-        return meeting_info
+        return {"meeting_info": meeting_info}
 
     raise HTTPException(status_code=response.status_code,
                         detail=response.json())
