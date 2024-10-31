@@ -78,6 +78,12 @@ async def create_meeting(meeting: CreateMeetingRequest, ACCESS_TOKEN: str = Depe
     raise HTTPException(status_code=response.status_code,
                         detail=response.json())
 
+@router.get("/meetings/{meeting_uuid}/content")
+async def get_meeting_content(meeting_uuid: str):
+    content = ""
+    with open(f"meeting_logs/{meeting_uuid}.json", "r") as f:
+       content = f.read()
+    return {"content": content}
 
 def extract_name_from_email(email: str):
     # Giả sử email có định dạng: firstname.lastname@example.com

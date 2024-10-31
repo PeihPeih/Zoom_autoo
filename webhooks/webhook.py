@@ -64,29 +64,51 @@ async def webhook(request: Request):
         topic = 'zoom/participant/joined'
         if payload:
             joined_time = participant['join_time']
-            timestamp = datetime.datetime.fromisoformat(joined_time.replace("Z", "+00:00"))
-            utc_plus_7 = timestamp + datetime.timedelta(hours=7)
-            formatted_timestamp = utc_plus_7.strftime("[%d-%m-%Y %H:%M:%S]")
+            formatted_timestamp = formatTime(joined_time)
             data = {
                 "name": name,
                 "join_time": formatted_timestamp,
                 "content": "đã tham gia cuộc họp"
             }
+            with open(f"meeting_logs/{object_payload['uuid']}.txt", "a") as f:
+                f.write(f"{name} đã tham gia cuộc họp vào lúc {formatted_timestamp}\n")
             client.publish(topic, json.dumps(data))
             print(f"Đã gửi dữ liệu tới {topic}: {payload}")
+
+
     if event == 'meeting.participant_left':
         participant = object_payload['participant']
         name = participant['user_name']
         topic = 'zoom/participant/left'
         if payload:
             leave_time = participant['leave_time']
-            timestamp = datetime.datetime.fromisoformat(leave_time.replace("Z", "+00:00"))
-            utc_plus_7 = timestamp + datetime.timedelta(hours=7)
-            formatted_timestamp = utc_plus_7.strftime("[%d-%m-%Y %H:%M:%S]")
+            formatted_timestamp = formatTime(leave_time)
             data = {
                 "name": name,
                 "leave_time": formatted_timestamp,
                 "content": "đã rời khỏi cuộc họp"
             }
+            with open(f"meeting_logs/{object_payload['uuid']}.txt", "a") as f:
+                f.write(f"{name} đã rời khỏi cuộc họp vào lúc {formatted_timestamp}\n")
             client.publish(topic, json.dumps(data))
             print(f"Đã gửi dữ liệu tới {topic}: {payload}")
+
+    
+    if event == 'meeting.started':
+        ## Tạo file lưu thông tin cuộc họp
+        uuid_meeting = object_payload['uuid']
+        start_time = object_payload['start_time']
+        formatted_timestamp = formatTime(start_time)
+        topic_metting = object_payload['topic']
+        duration = object_payload['duration']
+        info_meeting = "Thông tin cuộc họp: \n" + f"ID cuộc họp: {uuid_meeting}\n" + f"Thời gian bắt đầu: {formatted_timestamp}\n" + f"Chủ đề: {topic_metting}\n" + f"Thời lượng: {duration} phút\n" + "Người tham gia: \n"
+        with open(f"meeting_logs/{uuid_meeting}.txt", "w") as f:
+            f.write(info_meeting)
+        print(f"Đã tạo file lưu thông tin cuộc họp: {info_meeting}")
+        
+
+def formatTime(time):
+    timestamp = datetime.datetime.fromisoformat(time.replace("Z", "+00:00"))
+    utc_plus_7 = timestamp + datetime.timedelta(hours=7)
+    formatted_timestamp = utc_plus_7.strftime("[%d-%m-%Y %H:%M:%S]")
+    return formatted_timestamp
